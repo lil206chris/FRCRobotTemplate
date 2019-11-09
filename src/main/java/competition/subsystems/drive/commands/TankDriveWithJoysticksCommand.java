@@ -28,7 +28,6 @@ public class TankDriveWithJoysticksCommand extends BaseCommand {
         driveSubsystem.tankDrive(
             oi.gamepad.getLeftVector().y, 
             oi.gamepad.getRightVector().y);
-
     }
 
 }

@@ -16,22 +16,35 @@ public class DriveSubsystem extends BaseSubsystem {
 
     public final XCANTalon leftMaster;
     public final XCANTalon leftFollower;
+    public final XCANTalon leftFollower2;
     public final XCANTalon rightMaster;
     public final XCANTalon rightFollower;
+    public final XCANTalon rightFollower2;
 
     @Inject
     public DriveSubsystem(CommonLibFactory factory, XPropertyManager propManager) {
         log.info("Creating DriveSubsystem");
 
-        this.leftMaster = factory.createCANTalon(34);
-        this.leftFollower = factory.createCANTalon(35);
-        this.rightMaster = factory.createCANTalon(21);
-        this.rightFollower = factory.createCANTalon(20);
-
+        this.leftMaster = factory.createCANTalon(33);
+        this.leftFollower = factory.createCANTalon(34);
+        this.leftFollower2 = factory.createCANTalon(32);
+        this.rightMaster = factory.createCANTalon(22);
+        this.rightFollower = factory.createCANTalon(21);
+        this.rightFollower2 = factory.createCANTalon(23);
+/**
         XCANTalon.configureMotorTeam("LeftDrive", "LeftMaster", leftMaster, leftFollower, 
         true, true, false);
         XCANTalon.configureMotorTeam("RightDrive", "RightMaster", rightMaster, rightFollower, 
         false, false, false);
+        */
+
+        leftMaster.configureAsMasterMotor(this.getPrefix(), "leftMaster", false, false);
+        leftFollower.configureAsFollowerMotor(leftMaster, false);
+        leftFollower2.configureAsFollowerMotor(leftMaster, false);
+        rightMaster.configureAsMasterMotor(this.getPrefix(), "rightMaster", true, false);
+        rightFollower.configureAsFollowerMotor(rightMaster, true);
+        rightFollower2.configureAsFollowerMotor(rightMaster, true);
+        
     }
 
     public void tankDrive(double leftPower, double rightPower) {

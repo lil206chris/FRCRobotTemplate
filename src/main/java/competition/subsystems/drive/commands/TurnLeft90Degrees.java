@@ -45,7 +45,6 @@ public void initialize(){
     public boolean isFinished()
     {
         return pid.isOnTarget();
-        
     }
 
 }

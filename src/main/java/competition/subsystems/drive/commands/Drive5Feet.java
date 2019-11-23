@@ -7,51 +7,52 @@ import xbot.common.command.BaseCommand;
 import xbot.common.injection.wpi_factories.CommonLibFactory;
 import xbot.common.math.PIDFactory;
 import xbot.common.math.PIDManager;
-import xbot.common.subsystems.drive.control_logic.HeadingModule;
 
-public class DriveToOrientation extends BaseCommand{
+
+public class Drive5Feet extends BaseCommand{
     DriveSubsystem drive;
     double goal;
-    HeadingModule headingModule;
     PoseSubsystem pose;
     PIDManager pid;
+    double currentPosition;
+    int ticksPerInch = 217;
     @Inject
-    public DriveToOrientation(DriveSubsystem driveSubsystem, CommonLibFactory clf, PIDFactory pf, PoseSubsystem pose)
+    public Drive5Feet(DriveSubsystem driveSubsystem, CommonLibFactory clf, PIDFactory pf, PoseSubsystem pose)
     {
         this.drive = driveSubsystem;
         this.pose = pose;
-        pid = pf.createPIDManager("Rotate");
-        headingModule = clf.createHeadingModule(pid);
+        pid = pf.createPIDManager("DriveToPoint");
         pid.setEnableErrorThreshold(true);
         pid.setErrorThreshold(3);
         pid.setEnableDerivativeThreshold(true);
-        pid.setDerivativeThreshold(.1);
+        pid.setDerivativeThreshold(.2);
         this.requires(this.drive);
-        pid.setP(.05);
-        pid.setD(.2);
+        pid.setP(.5);
+        pid.setD(4);
+    
     }
-
     @Override
     public void initialize(){
-        goal = pose.getCurrentHeading().getValue() + 144;
+        goal = ticksToInches(drive.getLeftTotalDistance()) + 60;
 
     }
-
-    public void setTarget(double heading)
-    {
-        goal = heading;
-    }
-
     @Override
     public void execute() {
-        double power = headingModule.calculateHeadingPower(goal);
-        power *= .5;
-        drive.tankDrive(-power, power);
+        currentPosition = ticksToInches(drive.getLeftTotalDistance());
+        System.out.println("inches: " + currentPosition);
+        double power = pid.calculate(goal, currentPosition);
+        power *= .2;
+        drive.tankDrive(power, power);
     }
     public boolean isFinished()
     {
         return pid.isOnTarget();
         
+    }
+    public double ticksToInches(double ticks)
+    {
+        return ticks/ticksPerInch;
+
     }
 
 }

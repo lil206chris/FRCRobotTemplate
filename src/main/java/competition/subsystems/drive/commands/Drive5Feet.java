@@ -15,7 +15,7 @@ public class Drive5Feet extends BaseCommand{
     PoseSubsystem pose;
     PIDManager pid;
     double currentPosition;
-    int ticksPerInch = 217;
+
     @Inject
     public Drive5Feet(DriveSubsystem driveSubsystem, CommonLibFactory clf, PIDFactory pf, PoseSubsystem pose)
     {
@@ -33,15 +33,15 @@ public class Drive5Feet extends BaseCommand{
     }
     @Override
     public void initialize(){
-        goal = ticksToInches(drive.getLeftTotalDistance()) + 60;
+        goal = drive.getLeftTotalDistance() + 60;
 
     }
     @Override
     public void execute() {
-        currentPosition = ticksToInches(drive.getLeftTotalDistance());
+        currentPosition = drive.getLeftTotalDistance();
         System.out.println("inches: " + currentPosition);
         double power = pid.calculate(goal, currentPosition);
-        power *= .2;
+        power *= .3;
         drive.tankDrive(power, power);
     }
     public boolean isFinished()
@@ -49,10 +49,4 @@ public class Drive5Feet extends BaseCommand{
         return pid.isOnTarget();
         
     }
-    public double ticksToInches(double ticks)
-    {
-        return ticks/ticksPerInch;
-
-    }
-
 }

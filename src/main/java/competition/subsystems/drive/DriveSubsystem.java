@@ -53,13 +53,18 @@ public class DriveSubsystem extends BaseSubsystem {
         this.rightMaster.simpleSet(rightPower);
     }
     
-    
+    public double ticksToInches(double ticks)
+    {
+        return ticks/ticksPerInch;
+
+    }
+
     public double getLeftTotalDistance(){
-        return -1 * (leftMaster.getSelectedSensorPosition(0));
+        return ticksToInches((double)(-1. * (leftMaster.getSelectedSensorPosition(0))));
     }
     
     public double getRightTotalDistance(){
-        return rightMaster.getSelectedSensorPosition(0);
+        return ticksToInches((double)(rightMaster.getSelectedSensorPosition(0)));
     }
 
 }

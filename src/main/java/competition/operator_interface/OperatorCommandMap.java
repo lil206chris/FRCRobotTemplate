@@ -53,6 +53,8 @@ public class OperatorCommandMap {
         commandList.add(slow1);
         commandList.add(turn1);
 
+
+
         var commandGroup = new SimpleCommandGroup("Autothings", commandList, ExecutionType.Serial);
         oi.gamepad.getifAvailable(5).whenPressed(commandGroup);
 

@@ -20,13 +20,17 @@ public class TurnLeft90Degrees extends BaseCommand{
     {
         this.drive = driveSubsystem;
         this.pose = pose;
+
         pid = pf.createPIDManager("Rotate");
         headingModule = clf.createHeadingModule(pid);
+
         pid.setEnableErrorThreshold(true);
         pid.setErrorThreshold(3);
         pid.setEnableDerivativeThreshold(true);
         pid.setDerivativeThreshold(.1);
+
         this.requires(this.drive);
+        
         pid.setP(.05);
         pid.setD(.2);
     }
